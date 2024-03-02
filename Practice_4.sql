@@ -12,10 +12,10 @@ select x, y, z,
             else 'No' end as triangle
 from triangle
 --Ex3
-
-
-
-
+select 
+round(100*sum(case when call_category is null or call_category = 'n/a' then 1
+     else 0 end)/count(*),1)
+from callers
 
 --Ex4
 
