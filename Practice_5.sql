@@ -1,4 +1,4 @@
---Mid course test
+--Mid-course test
 --Q1
 select distinct replacement_cost 
 from film
@@ -64,5 +64,48 @@ left join country as ct
 on city.country_id = ct.country_id
 group by concat(city.city, ', ', ct.country)
 order by total_revenue 
+
+--Ex1
+SELECT CONTINENT, FLOOR(AVG(C1.POPULATION))
+FROM CITY AS C1
+INNER JOIN COUNTRY AS C2
+ON C1.COUNTRYCODE = C2.CODE
+GROUP BY CONTINENT;
+--Ex2
+
+select round(count(t.email_id)::decimal/count(e.email_id),2) as activation_rate
+from emails as e
+left join texts as t
+on t.email_id = e.email_id
+and t.signup_action = 'Confirmed'
+
+--Ex3
+SELECT ab.age_bucket,
+      round(100.0 *sum(case when activity_type = 'send' then time_spent else 0 end)
+      /sum(case when activity_type = 'send' or activity_type = 'open' then time_spent else 0 end),2) as send_perc,
+      round(100.0 *sum(case when activity_type = 'open' then time_spent else 0 end)
+      /sum(case when activity_type = 'send' or activity_type = 'open' then time_spent else 0 end),2) as open_perc
+from activities as a
+inner join age_breakdown as ab 
+on a. user_id = ab.user_id
+group by ab.age_bucket
+--Ex4
+SELECT c.customer_id
+from customer_contracts as c
+left join products as p
+on c.product_id = p.product_id
+group by customer_id
+having count(distinct p.product_category) = 3
+--Ex5
+select e1.employee_id,
+       e1.name,
+       count(*) as reports_count, 
+       round(avg(e2.age)) as average_age
+from employees as e1
+inner join employees as e2
+on e1.employee_id = e2.reports_to
+group by e1.employee_id, e1.name
+order by e1.employee_id
+
 
 
