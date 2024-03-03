@@ -106,6 +106,21 @@ inner join employees as e2
 on e1.employee_id = e2.reports_to
 group by e1.employee_id, e1.name
 order by e1.employee_id
+--Ex6
+select p.product_name, sum(o.unit) as unit
+from products as p
+inner join orders as o
+on p.product_id = o.product_id
+where extract(month from order_date)=2 
+and extract(year from order_date)=2020
+group by p.product_name
+having sum(o.unit) >=100
+--Ex7
+select page_id
+from pages
+except
+select page_id
+from page_likes
 
 
 
