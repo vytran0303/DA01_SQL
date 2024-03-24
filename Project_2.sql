@@ -56,9 +56,9 @@ from (
   select format_date('%Y-%m', created_at) as month_year,
        a.product_id,
        b.name,
-       sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at)) as sale,
-       (sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at))/b.retail_price)*b.cost as cost,
-       sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at))-(sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at))/b.retail_price)*b.cost as profit
+       round(sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at)),2) as sale,
+       round((sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at))/b.retail_price)*b.cost,2) as cost,
+       round(sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at))-(sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at))/b.retail_price)*b.cost,2) as profit
 from bigquery-public-data.thelook_ecommerce.order_items as a
 join bigquery-public-data.thelook_ecommerce.products as b
 on a.product_id=b.id))
@@ -68,7 +68,20 @@ from cte
 where rank_per_month in (1,2,3,4,5)
 order by 1, rank_per_month
 
---5. 
+
+--5. Daily category revenue within 3 months (current date 15/4/2022)
+
+select distinct cast(a.created_at as date) as dates,
+       b.category as product_category,
+       round(sum(a.sale_price) over(partition by cast(a.created_at as date), b.category order by cast(a.created_at as date)),2) as revenue
+from bigquery-public-data.thelook_ecommerce.order_items as a
+join bigquery-public-data.thelook_ecommerce.products as b
+on a.product_id=b.id
+where cast(a.created_at as date) between '2022-01-15' and '2022-04-15'
+
+
+
+
 
 
 
