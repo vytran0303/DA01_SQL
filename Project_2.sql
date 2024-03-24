@@ -7,6 +7,7 @@ where status = 'Complete'
 and created_at between '2019-01-01' and '2022-04-30'
 group by 1
 order by 1 desc
+
 --2. AOV and distint user
 select format_date('%Y-%m', a.created_at) as month_year,
        count(distinct a.user_id) as distinct_user,
@@ -47,6 +48,7 @@ from min_max_age
 
 --User trẻ nhất có độ tuổi là 12 và có 1052 user
 --User lớn nhất có độ tuổi là 70 và có 990 user
+
 
 --4. Top 5 highest profit product each month
 with cte as (
