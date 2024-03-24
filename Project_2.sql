@@ -60,7 +60,8 @@ from (
        b.name,
        round(sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at)),2) as sale,
        round((sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at))/b.retail_price)*b.cost,2) as cost,
-       round(sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at))-(sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at))/b.retail_price)*b.cost,2) as profit
+       round(sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at))-
+       (sum(a.sale_price) over(partition by format_date('%Y-%m', created_at), a.product_id order by format_date('%Y-%m', created_at))/b.retail_price)*b.cost,2) as profit
 from bigquery-public-data.thelook_ecommerce.order_items as a
 join bigquery-public-data.thelook_ecommerce.products as b
 on a.product_id=b.id))
